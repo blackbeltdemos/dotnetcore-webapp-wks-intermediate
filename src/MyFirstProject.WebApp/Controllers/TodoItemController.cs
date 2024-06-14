@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using MyFirstProject.WebApp.Models;
+using MyFirstProject.Shared.Models;
 using Newtonsoft.Json;
 using System.Diagnostics;
 

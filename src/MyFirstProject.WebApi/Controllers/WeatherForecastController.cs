@@ -34,7 +34,9 @@ namespace MyFirstProject.WebApi.Controllers
             .ToArray();
         }
 
-        public void ProcessRequest(string employeeName)
+     
+
+        private void ProcessRequest(string employeeName)
         {
             using (XmlWriter writer = XmlWriter.Create("employees.xml"))
             {

@@ -1,0 +1,47 @@
+@model IEnumerable<NYCrashItem>
+
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<h1>Weather Forecast</h1>
+
+@if (Model != null)
+{
+    /* Create a table to display the data - Show all records */
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Crash Date</th>
+                <th>Crash Time</th>
+                <th>Crash Borough</th>
+                <th>Crash Location</th>
+                <th>Number of Persons Injured</th>
+                <th>Number of Persons Killed</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.CRASH_DATE</td>
+                    <td>@item.CRASH_TIME</td>
+                    <td>@item.BOROUGH</td>
+                    <td>@item.LOCATION</td>
+                    <td>@item.NUMBER_OF_PERSONS_INJURED</td>
+                    <td>@item.NUMBER_OF_PERSONS_KILLED</td>
+                </tr>
+            }
+        </tbody>
+        </table>
+
+
+  
+
+    
+
+}
+else
+{
+    <p>No data</p>
+}

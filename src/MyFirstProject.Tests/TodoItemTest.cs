@@ -1,7 +1,7 @@
 using System.Net;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Newtonsoft.Json;
-using MyFirstProject.Tests.Models;
+using MyFirstProject.Shared.Models;
 
 namespace MyFirstProject.Tests
 {
