@@ -1,5 +1,9 @@
 using Microsoft.EntityFrameworkCore;
-using MyFirstProject.WebApi.Models;
+using MyFirstProject.Shared.Models;
+using CsvHelper;
+using System.Globalization;
+using System.IO;
+using MyFirstProject.WebApi.Context;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,13 +16,12 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-string connString = builder.Configuration.GetConnectionString("DefaultConnection");
-//builder.Services.AddDbContext<TodoItemContext>(opt =>
-//    opt.UseSqlServer(connString));
-
 // use in-memory database
-//builder.Services.AddDbContext<TodoItemContext>(opt =>
-//    opt.UseInMemoryDatabase("TodoList"));
+builder.Services.AddDbContext<TodoItemContext>(opt =>
+    opt.UseInMemoryDatabase("TodoList"));
+
+builder.Services.AddDbContext<NYCrashItemContext>(opt =>
+    opt.UseInMemoryDatabase("NyCrashList"));
 
 builder.Services.AddDbContext<TodoItemContext>(options =>
 {
@@ -41,14 +44,11 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-// removido por causa do Codespaces
-//app.UseHttpsRedirection();
-
 app.UseAuthorization();
 
 app.MapControllers();
 
-// create databse if not exists
+// create database if not exists
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
@@ -60,10 +60,11 @@ using (var scope = app.Services.CreateScope())
         // Check if any TodoItems exist, if not, add some
         if (!context.TodoItems.Any())
         {
-            context.TodoItems.Add(new TodoItem { Name = "Task 1", IsComplete = false });
-            context.TodoItems.Add(new TodoItem { Name = "Task 2", IsComplete = true });
-            context.TodoItems.Add(new TodoItem { Name = "Task 3", IsComplete = true });
-            context.TodoItems.Add(new TodoItem { Name = "Task 4", IsComplete = true });
+            //Create a Loop to populate 100 items
+            for (int i = 0; i < 100; i++)
+            {
+                context.TodoItems.Add(new TodoItem { Name = $"Task {i}", IsComplete = i % 2 == 0 });
+            }
             context.SaveChanges();
         }
     }
@@ -72,8 +73,37 @@ using (var scope = app.Services.CreateScope())
         var logger = services.GetRequiredService<ILogger<Program>>();
         logger.LogError(ex, "An error occurred creating the DB.");
     }
+
+    //NY Crash Items
+    var contextNY = services.GetRequiredService<NYCrashItemContext>();
+    contextNY.Database.EnsureCreated();
+
+    // Check if any NYCrashItems exist, if not, add some
+    if (!contextNY.NYCrashItems.Any())
+    {
+        //Reads the CSV file and populates the database 
+        // REMOVER a parte do PATH para deixar o copilot tentar acertar ou sugerir o caminho
+        using (var reader = new StreamReader(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "data", "new_york_sample_data.csv")))
+        {
+
+            var csvConfig = new CsvHelper.Configuration.CsvConfiguration(CultureInfo.InvariantCulture)
+            {
+                 MissingFieldFound = null
+            };
+
+            using (var csv = new CsvReader(reader, csvConfig))
+            {
+
+                var records = csv.GetRecords<NYCrashItem>().ToList();
+                contextNY.NYCrashItems.AddRange(records);
+                contextNY.SaveChanges();
+            }
+
+        }
+       
+    }
 }
 
 app.Run();
 
-public partial class Program {}
+public  partial class Program { }
