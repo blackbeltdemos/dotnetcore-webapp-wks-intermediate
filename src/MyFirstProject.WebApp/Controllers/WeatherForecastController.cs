@@ -26,7 +26,7 @@ namespace MyFirstProject.WebApp.Controllers
             {
                 _logger.LogInformation("WeatherForecast Page");
 
-                List<WeatherForecastModel> lst = new List<WeatherForecastModel>();
+                List<WeatherForecastItem> lst = new List<WeatherForecastItem>();
 
                 using (var httpClient = new HttpClient())
                 {
@@ -40,7 +40,7 @@ namespace MyFirstProject.WebApp.Controllers
                     using (var response = await httpClient.GetAsync("/api/WeatherForecast"))
                     {
                         string apiResponse = await response.Content.ReadAsStringAsync();
-                        lst = JsonConvert.DeserializeObject<List<WeatherForecastModel>>(apiResponse);
+                        lst = JsonConvert.DeserializeObject<List<WeatherForecastItem>>(apiResponse);
                     }
                 }
                 return View(lst);

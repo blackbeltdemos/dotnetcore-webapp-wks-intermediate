@@ -1,6 +1,6 @@
 ﻿namespace MyFirstProject.Shared.Models
 {
-    public class WeatherForecastModel
+    public class WeatherForecastItem
     {
         public DateTime Date { get; set; }
 
