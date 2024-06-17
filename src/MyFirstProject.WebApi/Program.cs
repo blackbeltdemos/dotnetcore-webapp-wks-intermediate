@@ -4,6 +4,7 @@ using CsvHelper;
 using System.Globalization;
 using System.IO;
 using MyFirstProject.WebApi.Context;
+using MyFirstProject.WebApi.Repository;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,12 +17,18 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+
+builder.Services.AddScoped<ITodoItemRepository, TodoItemRepository>();
+
+
 // use in-memory database
 builder.Services.AddDbContext<TodoItemContext>(opt =>
-    opt.UseInMemoryDatabase("TodoList"));
+opt.UseInMemoryDatabase("TodoList"));
 
 builder.Services.AddDbContext<NYCrashItemContext>(opt =>
-    opt.UseInMemoryDatabase("NyCrashList"));
+opt.UseInMemoryDatabase("NyCrashList"));
+
+
 
 builder.Services.AddDbContext<TodoItemContext>(options =>
 {
@@ -77,6 +84,8 @@ using (var scope = app.Services.CreateScope())
     //NY Crash Items
     var contextNY = services.GetRequiredService<NYCrashItemContext>();
     contextNY.Database.EnsureCreated();
+
+   
 
     // Check if any NYCrashItems exist, if not, add some
     if (!contextNY.NYCrashItems.Any())
