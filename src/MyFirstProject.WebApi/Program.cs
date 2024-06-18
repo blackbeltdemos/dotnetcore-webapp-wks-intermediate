@@ -28,9 +28,6 @@ builder.Services.AddScoped<IWeatherMeteo, WeatherMeteoRepository>();
 builder.Services.AddDbContext<TodoItemContext>(opt =>
 opt.UseInMemoryDatabase("TodoList"));
 
-builder.Services.AddDbContext<NYCrashItemContext>(opt =>
-opt.UseInMemoryDatabase("NyCrashList"));
-
 
 
 builder.Services.AddDbContext<TodoItemContext>(options =>
@@ -95,7 +92,7 @@ using (var scope = app.Services.CreateScope())
     {
         //Reads the CSV file and populates the database 
         // REMOVER a parte do PATH para deixar o copilot tentar acertar ou sugerir o caminho
-        using (var reader = new StreamReader(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "data", "new_york_sample_data.csv")))
+        using (var reader = new StreamReader("new_york_sample_data.csv"))
         {
 
             var csvConfig = new CsvHelper.Configuration.CsvConfiguration(CultureInfo.InvariantCulture)

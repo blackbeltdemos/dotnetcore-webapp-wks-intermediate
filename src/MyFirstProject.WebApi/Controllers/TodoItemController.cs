@@ -23,7 +23,7 @@ namespace MyFirstProject.WebApi.Controllers
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<TodoItem>> GetTodoItems()
+        public  ActionResult<IEnumerable<TodoItem>> GetTodoItems()
         {
             _logger.LogInformation("Method - GetTodoItems");
             return _repository.GetTodoItems();

@@ -19,12 +19,12 @@ namespace MyFirstProject.WebApi.Repository {
         }
 
    
-        public ActionResult<IEnumerable<TodoItem>> GetTodoItems()
+        public  ActionResult<IEnumerable<TodoItem>> GetTodoItems()
         {
             _logger.LogInformation("Method - GetTodoItems");
-            return _context.TodoItems.ToList();
+            return  _context.TodoItems.ToList();
         }
-
+         
 
   
         public async Task<ActionResult<TodoItem>> GetTodoItem(long id)
